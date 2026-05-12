@@ -1,2 +1,2 @@
-# supra-frontend
-Uma plataforma de estuda para concurso
+# Supra - Frontend
+Plataforma de estudos para concurso
