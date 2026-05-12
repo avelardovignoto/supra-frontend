@@ -1,143 +1,29 @@
 'use client'
 
 import { useState } from "react";
-
-type TQuestion = {
-  id: number;
-  question: string;
-  options: TOption[];
-};
-
-type TOption = {
-  option: string;
-  isSelected: boolean;
-  isCorrect: boolean;
-  color: string;
-  disabled: boolean;
-};
-
-const questions: TQuestion[] = [
-  {
-    id: 1,
-    question: "Qual é a capital do Brasil?",
-    options: [
-      {
-        option: "São Paulo",
-        isSelected: false,
-        isCorrect: false,
-        color: "",
-        disabled: false
-      },
-      {
-        option: "Rio de Janeiro",
-        isSelected: false,
-        isCorrect: false,
-        color: "",
-        disabled: false
-      },
-      {
-        option: "Brasília",
-        isSelected: false,
-        isCorrect: true,
-        color: "",
-        disabled: false 
-      },
-      {
-        option: "Salvador",
-        isSelected: false,
-        isCorrect: false,
-        color: "",
-        disabled: false
-      }
-    ]
-  },
-
-  {
-    id: 2,
-    question: "Qual linguagem é usada no Next.js?",
-    options: [
-      {
-        option: "PHP",
-        isSelected: false,
-        isCorrect: false,
-        color: "",
-        disabled: false
-      },
-      {
-        option: "Java",
-        isSelected: false,
-        isCorrect: false,
-        color: "",
-        disabled: false
-      },
-      {
-        option: "Javascript",
-        isSelected: false,
-        isCorrect: true,
-        color: "",
-        disabled: false
-      },
-      {
-        option: "Python",
-        isSelected: false,
-        isCorrect: false,
-        color: "",
-        disabled: false
-      }
-    ]
-  },
-  {
-    id: 3,
-    question: "O que é Tailwind?",
-    options: [
-      {
-        option: "Framework JS",
-        isSelected: false,
-        isCorrect: false,
-        color: "",
-        disabled: false
-      },
-      {
-        option: "Banco de dados",
-        isSelected: false,
-        isCorrect: false,
-        color: "",
-        disabled: false
-      },
-      {
-        option: "Biblioteca CSS",
-        isSelected: false,
-        isCorrect: true,
-        color: "",
-        disabled: false
-      },
-      {
-        option: "Linguagem de programação",
-        isSelected: false,
-        isCorrect: false,
-        color: "",
-        disabled: false
-      }
-    ],
-  },
-];
+import { questions } from "./utils/questions";
+import { TOption, TQuestion } from "./models/TQuestion";
 
 export default function Home() {
   const [current, setCurrent] = useState(0);
-  //const [answers, setAnswers] = useState<number[]>([]);
   const [disabled, setDisabled] = useState<boolean>(false);
-  
-  const currentQuestion = questions[current];
+  const [quizQuestions, setQuizQuestions] = useState<TQuestion[]>(questions);
+
+  const currentQuestion = quizQuestions[current];
 
   const selectOption = (index: number) => {
-    // const newAnswers = [...answers]; 
-    // newAnswers[current] = index; 
-    // setAnswers(newAnswers);
-    currentQuestion.options[index].isSelected = true;
+    const updatedQuestions = [...quizQuestions];
+
+    updatedQuestions[current].options =
+      updatedQuestions[current].options.map((option, i) => ({
+        ...option,
+        isSelected: i === index
+      }));
+
+    setQuizQuestions(updatedQuestions);
   };
 
   const evaluate = () => {
-    console.log('EVALUATE BUTTON CLICKED');
     setDisabled(true)
     currentQuestion.options.map(option => {
       if (option.isCorrect) {
@@ -154,6 +40,23 @@ export default function Home() {
     if (current < questions.length - 1) { 
       setCurrent(current + 1);            
     }
+    setDisabled(false)
+  };
+
+  const actionsStyles = (option: TOption) => {
+    if (option.color === 'green') {
+      return 'bg-green-500 text-white border-green-500';
+    }
+
+    if (option.color === 'red') {
+      return 'bg-red-500 text-white border-red-500'
+    }
+
+    if (option.isSelected) {
+      return 'bg-blue-500 text-white border-blue-500';
+    }
+
+    return `bg-gray-50 ${disabled ? "" : "hover:bg-gray-100"} border-gray-300`;
   };
 
   return (
@@ -172,12 +75,7 @@ export default function Home() {
               <button
                 key={index}
                 onClick={() => selectOption(index)}
-                className={`cursor-pointer w-full text-left p-3 rounded-xl border transition 
-                ${
-                  option.isSelected
-                    ? "bg-blue-500 text-white border-blue-500"
-                    : `bg-gray-50 ${disabled ? "" : "hover:bg-gray-100"} border-gray-300`
-                }`}
+                className={`cursor-pointer w-full text-left p-3 rounded-xl border transition ${actionsStyles(option)}`}
                 disabled={disabled}
               >
                 {option.option}
