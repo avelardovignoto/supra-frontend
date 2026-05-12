@@ -3,11 +3,13 @@
 import { useState } from "react";
 import { questions } from "./utils/questions";
 import { TOption, TQuestion } from "./models/TQuestion";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const [current, setCurrent] = useState(0);
   const [disabled, setDisabled] = useState<boolean>(false);
   const [quizQuestions, setQuizQuestions] = useState<TQuestion[]>(questions);
+  const [disabledButton, setDisabledButton] = useState<boolean>(true);
 
   const currentQuestion = quizQuestions[current];
 
@@ -21,10 +23,13 @@ export default function Home() {
       }));
 
     setQuizQuestions(updatedQuestions);
+
+    setDisabledButton(false);
   };
 
   const evaluate = () => {
-    setDisabled(true)
+    setDisabled(true);
+
     currentQuestion.options.map(option => {
       if (option.isCorrect) {
         option.color = "green";
@@ -33,13 +38,16 @@ export default function Home() {
       if (!option.isCorrect && option.isSelected) {
         option.color = "red";
       }
-    })
+    });
+
+    setDisabledButton(true);
   };
 
   const next = () => {
     if (current < questions.length - 1) { 
       setCurrent(current + 1);            
     }
+
     setDisabled(false)
   };
 
@@ -89,12 +97,20 @@ export default function Home() {
 
           {current < questions.length - 1 ? (
             <>
-              <button
+              {/* <button
                 className="cursor-pointer px-4 py-2 rounded-xl bg-green-500 text-white hover:bg-green-600"
                 onClick={evaluate}
               >
                 Avaliar
-              </button>
+              </button> */}
+              <Button 
+                onClick={evaluate}
+                className="cursor-pointer px-4 py-2 rounded-xl bg-green-500 text-white hover:bg-green-600"
+                variant="outline"
+                disabled={disabledButton}
+              >
+                  Avaliar
+              </Button>
 
               <button
                 onClick={next}
