@@ -10,7 +10,8 @@ export default function Home() {
   const [disabled, setDisabled] = useState<boolean>(false);
   const [quizQuestions, setQuizQuestions] = useState<TQuestion[]>(questions);
   const [disabledButton, setDisabledButton] = useState<boolean>(true);
-
+  const [disabledFinish, setDisabledFinish] = useState<boolean>(true);
+  
   const currentQuestion = quizQuestions[current];
 
   const selectOption = (index: number) => {
@@ -41,6 +42,7 @@ export default function Home() {
     });
 
     setDisabledButton(true);
+    setDisabledFinish(false);
   };
 
   const next = () => {
@@ -48,7 +50,8 @@ export default function Home() {
       setCurrent(current + 1);            
     }
 
-    setDisabled(false)
+    setDisabled(false);
+    setDisabledFinish(true);
   };
 
   const actionsStyles = (option: TOption) => {
@@ -94,38 +97,30 @@ export default function Home() {
 
         {/* Navegação */}
         <div className="flex justify-between">
+          <Button 
+            onClick={evaluate}
+            className="cursor-pointer px-4 py-2 rounded-xl bg-green-500 text-white hover:bg-green-600"
+            variant="outline"
+            disabled={disabledButton}
+          >
+            Avaliar
+          </Button>
 
           {current < questions.length - 1 ? (
-            <>
-              {/* <button
-                className="cursor-pointer px-4 py-2 rounded-xl bg-green-500 text-white hover:bg-green-600"
-                onClick={evaluate}
-              >
-                Avaliar
-              </button> */}
-              <Button 
-                onClick={evaluate}
-                className="cursor-pointer px-4 py-2 rounded-xl bg-green-500 text-white hover:bg-green-600"
-                variant="outline"
-                disabled={disabledButton}
-              >
-                  Avaliar
-              </Button>
-
-              <button
-                onClick={next}
-                className="cursor-pointer px-4 py-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600"
-                >
-                Avançar
-              </button>
-            </>
-          ) : (
             <button
+              onClick={next}
+              className="cursor-pointer px-4 py-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600"
+            >
+              Avançar
+            </button>
+          ) : (
+            <Button
               onClick={() => alert("Quiz finalizado!")}
               className="cursor-pointer px-4 py-2 rounded-xl bg-green-500 text-white hover:bg-green-600"
+              disabled={disabledFinish}
             >
               Finalizar
-            </button>
+            </Button>
           )}
         </div>
       </div>
