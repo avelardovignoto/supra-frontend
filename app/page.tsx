@@ -100,19 +100,19 @@ export default function Home() {
           <Button 
             onClick={evaluate}
             className="cursor-pointer px-4 py-2 rounded-xl bg-green-500 text-white hover:bg-green-600"
-            variant="outline"
             disabled={disabledButton}
           >
             Avaliar
           </Button>
 
           {current < questions.length - 1 ? (
-            <button
+            <Button
               onClick={next}
               className="cursor-pointer px-4 py-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600"
+              disabled={disabledFinish}
             >
               Avançar
-            </button>
+            </Button>
           ) : (
             <Button
               onClick={() => alert("Quiz finalizado!")}
