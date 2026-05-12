@@ -124,7 +124,7 @@ const questions: TQuestion[] = [
 
 export default function Home() {
   const [current, setCurrent] = useState(0);
-  const [answers, setAnswers] = useState<number[]>([]);
+  //const [answers, setAnswers] = useState<number[]>([]);
   const [disabled, setDisabled] = useState<boolean>(false);
   
   const currentQuestion = questions[current];
